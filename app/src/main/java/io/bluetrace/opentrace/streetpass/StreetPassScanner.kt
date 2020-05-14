@@ -14,7 +14,9 @@ import io.bluetrace.opentrace.services.BluetoothMonitoringService.Companion.infi
 import io.bluetrace.opentrace.status.Status
 import kotlin.properties.Delegates
 import android.widget.Toast
-
+import androidx.annotation.RequiresApi
+import java.io.File
+import java.time.LocalDateTime
 
 class StreetPassScanner constructor(
     context: Context,
@@ -78,12 +80,12 @@ class StreetPassScanner constructor(
 
         private val TAG = "BleScanCallback"
 
+        @RequiresApi(Build.VERSION_CODES.O)
         private fun processScanResult(scanResult: ScanResult?) {
 
             scanResult?.let { result ->
                 val device = result.device
                 var rssi = result.rssi // get RSSI value
-                CentralLog.d(TAG, "RSSI: $rssi")
 
                 val toneG = ToneGenerator(AudioManager.STREAM_ALARM, 100)
                 if(rssi < -60){
@@ -107,6 +109,10 @@ class StreetPassScanner constructor(
                 var connectable = ConnectablePeripheral(manuString, txPower, rssi)
 
                 CentralLog.i(TAG, "Scanned: ${manuString} - ${device.address}")
+
+                val file = File(context.filesDir, "log.txt")
+                val currentDateTime = LocalDateTime.now()
+                file.appendText("\n" + "${currentDateTime} Scanned RSSI: ${rssi}, ${manuString} - ${device.address}")
 
                 Utils.broadcastDeviceScanned(context, device, connectable)
             }
