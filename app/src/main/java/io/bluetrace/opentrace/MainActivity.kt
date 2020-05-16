@@ -2,7 +2,9 @@ package io.bluetrace.opentrace
 
 import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -14,6 +16,7 @@ import io.bluetrace.opentrace.fragment.ForUseByOTCFragment
 import io.bluetrace.opentrace.fragment.HomeFragment
 import io.bluetrace.opentrace.logging.CentralLog
 import io.bluetrace.opentrace.buzzer.Buzzer
+import io.bluetrace.opentrace.location.LocationActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,7 +32,11 @@ class MainActivity : AppCompatActivity() {
 //        Buzzer buzzer = new Buzzer();
 //
         Utils.startBluetoothMonitoringService(this)
-
+        val btnOpenLocation: Button =findViewById(R.id.btn_location)
+        btnOpenLocation.setOnClickListener{
+            val intent = Intent(this, LocationActivity::class.java)
+            startActivity(intent)
+        }
         LAYOUT_MAIN_ID = R.id.content
 
         val mOnNavigationItemSelectedListener =
